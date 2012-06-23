@@ -1,0 +1,11 @@
+Revision history for Test-LWP-UserAgent
+
+0.002     2012-06-23 09:36:51 PDT-0700 (Karen Etheridge)
+          - minor documentation fixes
+          - renamed from Test::Mock::LWP::UserAgent to Test::LWP::UserAgent
+            (thanks, mst!)
+
+0.001     2012-06-22 17:11:20 PDT-0700 (Karen Etheridge)
+          - Initial release, in all its questionable glory.
+
+
