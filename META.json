@@ -25,7 +25,6 @@
             "Scalar::Util" : "0",
             "Storable" : "0",
             "parent" : "0",
-            "re" : "0",
             "strict" : "0",
             "warnings" : "0"
          }
@@ -52,7 +51,7 @@
          "web" : "https://github.com/karenetheridge/Test-LWP-UserAgent"
       }
    },
-   "version" : "0.002",
+   "version" : "0.003",
    "x_Dist_Zilla" : {
       "plugins" : [
          {
