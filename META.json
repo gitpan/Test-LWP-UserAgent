@@ -21,6 +21,7 @@
       },
       "runtime" : {
          "requires" : {
+            "HTTP::Date" : "0",
             "LWP::UserAgent" : "0",
             "Scalar::Util" : "0",
             "Storable" : "0",
@@ -38,8 +39,15 @@
             "Test::Deep" : "0.110",
             "Test::More" : "0.88",
             "Test::NoWarnings" : "1.04",
-            "URI" : "0"
+            "URI" : "0",
+            "overload" : "0"
          }
+      }
+   },
+   "provides" : {
+      "Test::LWP::UserAgent" : {
+         "file" : "lib/Test/LWP/UserAgent.pm",
+         "version" : "0.005"
       }
    },
    "release_status" : "stable",
@@ -51,13 +59,13 @@
          "web" : "https://github.com/karenetheridge/Test-LWP-UserAgent"
       }
    },
-   "version" : "0.004",
+   "version" : "0.005",
    "x_Dist_Zilla" : {
       "plugins" : [
          {
             "class" : "Dist::Zilla::Plugin::Git::GatherDir",
             "name" : "Git::GatherDir",
-            "version" : "1.121010"
+            "version" : "1.121820"
          },
          {
             "class" : "Dist::Zilla::Plugin::PruneCruft",
@@ -127,7 +135,7 @@
          {
             "class" : "Dist::Zilla::Plugin::Git::NextVersion",
             "name" : "Git::NextVersion",
-            "version" : "1.121010"
+            "version" : "1.121820"
          },
          {
             "class" : "Dist::Zilla::Plugin::GithubMeta",
@@ -155,6 +163,11 @@
             "version" : "4.300020"
          },
          {
+            "class" : "Dist::Zilla::Plugin::MetaProvides::Package",
+            "name" : "MetaProvides::Package",
+            "version" : "1.14000001"
+         },
+         {
             "class" : "Dist::Zilla::Plugin::MetaJSON",
             "name" : "MetaJSON",
             "version" : "4.300020"
@@ -162,7 +175,7 @@
          {
             "class" : "Dist::Zilla::Plugin::Git::Describe",
             "name" : "Git::Describe",
-            "version" : "0.001"
+            "version" : "0.002"
          },
          {
             "class" : "Dist::Zilla::Plugin::PkgVersion",
@@ -212,7 +225,7 @@
          {
             "class" : "Dist::Zilla::Plugin::Test::MinimumVersion",
             "name" : "Test::MinimumVersion",
-            "version" : "2.0.1"
+            "version" : "2.000002"
          },
          {
             "class" : "Dist::Zilla::Plugin::MetaTests",
@@ -252,7 +265,7 @@
          {
             "class" : "Dist::Zilla::Plugin::Git::Check",
             "name" : "Git::Check",
-            "version" : "1.121010"
+            "version" : "1.121820"
          },
          {
             "class" : "Dist::Zilla::Plugin::NextRelease",
@@ -262,17 +275,17 @@
          {
             "class" : "Dist::Zilla::Plugin::Git::Commit",
             "name" : "Git::Commit",
-            "version" : "1.121010"
+            "version" : "1.121820"
          },
          {
             "class" : "Dist::Zilla::Plugin::Git::Tag",
             "name" : "Git::Tag",
-            "version" : "1.121010"
+            "version" : "1.121820"
          },
          {
             "class" : "Dist::Zilla::Plugin::Git::Push",
             "name" : "Git::Push",
-            "version" : "1.121010"
+            "version" : "1.121820"
          },
          {
             "class" : "Dist::Zilla::Plugin::InstallRelease",

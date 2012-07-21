@@ -11,6 +11,7 @@ build_requires:
   Test::More: 0.88
   Test::NoWarnings: 1.04
   URI: 0
+  overload: 0
 configure_requires:
   ExtUtils::MakeMaker: 6.30
 dynamic_config: 0
@@ -20,7 +21,12 @@ meta-spec:
   url: http://module-build.sourceforge.net/META-spec-v1.4.html
   version: 1.4
 name: Test-LWP-UserAgent
+provides:
+  Test::LWP::UserAgent:
+    file: lib/Test/LWP/UserAgent.pm
+    version: 0.005
 requires:
+  HTTP::Date: 0
   LWP::UserAgent: 0
   Scalar::Util: 0
   Storable: 0
@@ -30,13 +36,13 @@ requires:
 resources:
   homepage: https://github.com/karenetheridge/Test-LWP-UserAgent
   repository: https://github.com/karenetheridge/Test-LWP-UserAgent.git
-version: 0.004
+version: 0.005
 x_Dist_Zilla:
   plugins:
     -
       class: Dist::Zilla::Plugin::Git::GatherDir
       name: Git::GatherDir
-      version: 1.121010
+      version: 1.121820
     -
       class: Dist::Zilla::Plugin::PruneCruft
       name: '@Filter/PruneCruft'
@@ -92,7 +98,7 @@ x_Dist_Zilla:
     -
       class: Dist::Zilla::Plugin::Git::NextVersion
       name: Git::NextVersion
-      version: 1.121010
+      version: 1.121820
     -
       class: Dist::Zilla::Plugin::GithubMeta
       name: GithubMeta
@@ -114,13 +120,17 @@ x_Dist_Zilla:
       name: MetaConfig
       version: 4.300020
     -
+      class: Dist::Zilla::Plugin::MetaProvides::Package
+      name: MetaProvides::Package
+      version: 1.14000001
+    -
       class: Dist::Zilla::Plugin::MetaJSON
       name: MetaJSON
       version: 4.300020
     -
       class: Dist::Zilla::Plugin::Git::Describe
       name: Git::Describe
-      version: 0.001
+      version: 0.002
     -
       class: Dist::Zilla::Plugin::PkgVersion
       name: PkgVersion
@@ -160,7 +170,7 @@ x_Dist_Zilla:
     -
       class: Dist::Zilla::Plugin::Test::MinimumVersion
       name: Test::MinimumVersion
-      version: 2.0.1
+      version: 2.000002
     -
       class: Dist::Zilla::Plugin::MetaTests
       name: MetaTests
@@ -192,7 +202,7 @@ x_Dist_Zilla:
     -
       class: Dist::Zilla::Plugin::Git::Check
       name: Git::Check
-      version: 1.121010
+      version: 1.121820
     -
       class: Dist::Zilla::Plugin::NextRelease
       name: NextRelease
@@ -200,15 +210,15 @@ x_Dist_Zilla:
     -
       class: Dist::Zilla::Plugin::Git::Commit
       name: Git::Commit
-      version: 1.121010
+      version: 1.121820
     -
       class: Dist::Zilla::Plugin::Git::Tag
       name: Git::Tag
-      version: 1.121010
+      version: 1.121820
     -
       class: Dist::Zilla::Plugin::Git::Push
       name: Git::Push
-      version: 1.121010
+      version: 1.121820
     -
       class: Dist::Zilla::Plugin::InstallRelease
       name: InstallRelease

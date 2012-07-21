@@ -1,8 +1,8 @@
 package Test::LWP::UserAgent;
 {
-  $Test::LWP::UserAgent::VERSION = '0.004';
+  $Test::LWP::UserAgent::VERSION = '0.005';
 }
-# git description: v0.003-4-ga1fce5f
+# git description: v0.004-11-g9d09385
 
 
 use strict;
@@ -11,6 +11,7 @@ use warnings;
 use parent 'LWP::UserAgent';
 use Scalar::Util qw(blessed reftype);
 use Storable 'freeze';
+use HTTP::Date;
 
 my $last_http_request_sent;
 my $last_http_response_received;
@@ -37,10 +38,9 @@ sub map_response
     my ($self, $request_description, $response) = @_;
 
     warn "map_response: response is not an HTTP::Response, it's a " . blessed($response)
-        if not (ref $response eq 'CODE' or
-            blessed($response) and $response->isa('HTTP::Response'));
+        unless eval { \&$response } or eval { $response->isa('HTTP::Response') };
 
-    if (blessed($self))
+    if (blessed $self)
     {
         push @{$self->{__response_map}}, [ $request_description, $response ];
     }
@@ -87,30 +87,32 @@ sub send_request
 {
     my ($self, $request) = @_;
 
-    my $matched_response;
+    my $matched_response = $self->run_handlers("request_send", $request);
+
     foreach my $entry (@{$self->{__response_map}}, @response_map)
     {
+        last if $matched_response;
         next if not defined $entry;
         my ($request_desc, $response) = @$entry;
 
-        if (blessed $request_desc and $request_desc->isa('HTTP::Request'))
+        if (eval { $request_desc->isa('HTTP::Request') })
         {
-            $matched_response = $response and last
+            $matched_response = $response, last
                 if freeze($request) eq freeze($request_desc);
         }
         elsif (not reftype $request_desc)
         {
-            $matched_response = $response and last
+            $matched_response = $response, last
                 if $request->uri eq $request_desc;
         }
-        elsif (reftype $request_desc eq 'CODE')
+        elsif (eval { \&$request_desc })
         {
-            $matched_response = $response and last
+            $matched_response = $response, last
                 if $request_desc->($request);
         }
         elsif (__is_regexp $request_desc)
         {
-            $matched_response = $response and last
+            $matched_response = $response, last
                 if $request->uri =~ $request_desc;
         }
         else
@@ -121,14 +123,25 @@ sub send_request
 
     $last_http_request_sent = $self->{__last_http_request_sent} = $request;
 
-    $last_http_response_received = $self->{__last_http_response_received} =
-        ($matched_response || HTTP::Response->new(404));
+    my $response = defined $matched_response ? $matched_response : HTTP::Response->new(404);
 
-    $last_http_response_received = $self->{__last_http_response_received} =
-            $last_http_response_received->($request)
-        if ref $last_http_response_received eq 'CODE';
+    if (eval { \&$response })
+    {
+        $response = $response->($request);
 
-    return $last_http_response_received;
+        warn "response from coderef is not a HTTP::Response, it's a ", blessed($response)
+            unless eval { $response->isa('HTTP::Response') };
+    }
+
+    $last_http_response_received = $self->{__last_http_response_received} = $response;
+
+    # bookkeeping that the real LWP::UserAgent does
+    $response->request($request);  # record request for reference
+    $response->header("Client-Date" => HTTP::Date::time2str(time));
+    $self->run_handlers("response_done", $response);
+    $self->progress("end", $response);
+
+    return $response;
 }
 
 sub __is_regexp($)
@@ -143,7 +156,7 @@ __END__
 
 =head1 NAME
 
-Test::LWP::Dispatch - a LWP::UserAgent suitable for simulating and testing network calls
+Test::LWP::UserAgent - a LWP::UserAgent suitable for simulating and testing network calls
 
 =head1 SYNOPSIS
 
