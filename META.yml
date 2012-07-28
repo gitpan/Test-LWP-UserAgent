@@ -10,7 +10,7 @@ build_requires:
   Test::Deep: 0.110
   Test::More: 0.88
   Test::NoWarnings: 1.04
-  URI: 0
+  Test::Requires: 0
   overload: 0
 configure_requires:
   ExtUtils::MakeMaker: 6.30
@@ -24,19 +24,22 @@ name: Test-LWP-UserAgent
 provides:
   Test::LWP::UserAgent:
     file: lib/Test/LWP/UserAgent.pm
-    version: 0.005
+    version: 0.006
 requires:
   HTTP::Date: 0
+  HTTP::Request: 0
+  HTTP::Response: 0
   LWP::UserAgent: 0
   Scalar::Util: 0
   Storable: 0
+  URI: 0
   parent: 0
   strict: 0
   warnings: 0
 resources:
   homepage: https://github.com/karenetheridge/Test-LWP-UserAgent
   repository: https://github.com/karenetheridge/Test-LWP-UserAgent.git
-version: 0.005
+version: 0.006
 x_Dist_Zilla:
   plugins:
     -
@@ -186,7 +189,7 @@ x_Dist_Zilla:
     -
       class: Dist::Zilla::Plugin::Test::ChangesHasContent
       name: Test::ChangesHasContent
-      version: 0.005
+      version: 0.006
     -
       class: Dist::Zilla::Plugin::Test::CheckDeps
       name: Test::CheckDeps
@@ -254,5 +257,5 @@ x_Dist_Zilla:
   zilla:
     class: Dist::Zilla::Dist::Builder
     config:
-      is_trial: 0
+      is_trial: 1
     version: 4.300020

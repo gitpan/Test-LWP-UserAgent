@@ -19,7 +19,7 @@ my %WriteMakefileArgs = (
     "Test::Deep" => "0.110",
     "Test::More" => "0.88",
     "Test::NoWarnings" => "1.04",
-    "URI" => 0,
+    "Test::Requires" => 0,
     "overload" => 0
   },
   "CONFIGURE_REQUIRES" => {
@@ -31,14 +31,17 @@ my %WriteMakefileArgs = (
   "NAME" => "Test::LWP::UserAgent",
   "PREREQ_PM" => {
     "HTTP::Date" => 0,
+    "HTTP::Request" => 0,
+    "HTTP::Response" => 0,
     "LWP::UserAgent" => 0,
     "Scalar::Util" => 0,
     "Storable" => 0,
+    "URI" => 0,
     "parent" => 0,
     "strict" => 0,
     "warnings" => 0
   },
-  "VERSION" => "0.005",
+  "VERSION" => "0.006",
   "test" => {
     "TESTS" => "t/*.t"
   }

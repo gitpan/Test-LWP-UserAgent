@@ -1,7 +1,7 @@
 use strict;
 use warnings FATAL => 'all';
 
-use Test::More tests => 50;
+use Test::More tests => 60;
 use Test::NoWarnings 1.04 ':early';
 use Test::Deep 0.110;
 use Storable 'freeze';
@@ -166,7 +166,6 @@ sub test_send_request
 
     # response is what we stored in the useragent
     isa_ok($response, 'HTTP::Response');
-
     is(
         freeze($MyApp::useragent->last_http_response_received),
         freeze($response),
@@ -188,8 +187,14 @@ sub test_send_request
         $response,
         methods(
             code => $expected_code,
+            request => $MyApp::useragent->last_http_request_sent,
         ),
         "$name response",
+    );
+
+    ok(
+        HTTP::Date::parse_date($response->header('Client-Date')),
+        'Client-Date is a timestamp',
     );
 }
 

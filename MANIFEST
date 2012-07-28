@@ -11,8 +11,9 @@ lib/Test/LWP/UserAgent.pm
 t/00-check-deps.t
 t/00-compile.t
 t/01-basic.t
-t/02_overload.t
+t/02-overload.t
 t/03-handlers.t
+t/04-psgi.t
 t/release-changes_has_content.t
 t/release-cpan-changes.t
 t/release-distmeta.t
