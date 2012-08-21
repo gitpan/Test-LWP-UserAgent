@@ -14,6 +14,9 @@ t/01-basic.t
 t/02-overload.t
 t/03-handlers.t
 t/04-psgi.t
+t/05-exceptions.t
+t/06-network-fallback.t
+t/07-mask-response.t
 t/release-changes_has_content.t
 t/release-cpan-changes.t
 t/release-distmeta.t

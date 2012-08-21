@@ -3,14 +3,17 @@ abstract: 'A LWP::UserAgent suitable for simulating and testing network calls'
 author:
   - 'Karen Etheridge <ether@cpan.org>'
 build_requires:
+  Class::Load: 0
   File::Find: 0
   File::Temp: 0
   HTTP::Request::Common: 0
   Test::CheckDeps: 0.002
   Test::Deep: 0.110
+  Test::Fatal: 0
   Test::More: 0.88
   Test::NoWarnings: 1.04
   Test::Requires: 0
+  Test::Warn: 0
   overload: 0
 configure_requires:
   ExtUtils::MakeMaker: 6.30
@@ -24,14 +27,16 @@ name: Test-LWP-UserAgent
 provides:
   Test::LWP::UserAgent:
     file: lib/Test/LWP/UserAgent.pm
-    version: 0.007
+    version: 0.008
 requires:
   HTTP::Date: 0
   HTTP::Request: 0
   HTTP::Response: 0
+  HTTP::Status: 0
   LWP::UserAgent: 0
   Scalar::Util: 0
   Storable: 0
+  Try::Tiny: 0
   URI: 0
   parent: 0
   perl: 5.006
@@ -40,7 +45,7 @@ requires:
 resources:
   homepage: https://github.com/karenetheridge/Test-LWP-UserAgent
   repository: https://github.com/karenetheridge/Test-LWP-UserAgent.git
-version: 0.007
+version: 0.008
 x_Dist_Zilla:
   plugins:
     -
@@ -143,6 +148,10 @@ x_Dist_Zilla:
       class: Dist::Zilla::Plugin::MinimumPerl
       name: MinimumPerl
       version: 1.003
+    -
+      class: Dist::Zilla::Plugin::PodWeaver
+      name: PodWeaver
+      version: 3.101641
     -
       class: Dist::Zilla::Plugin::ReadmeAnyFromPod
       name: ReadmeAnyFromPod

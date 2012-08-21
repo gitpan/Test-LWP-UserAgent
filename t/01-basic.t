@@ -1,10 +1,10 @@
 use strict;
 use warnings FATAL => 'all';
 
-use Test::More tests => 60;
+use Test::More tests => 80;
 use Test::NoWarnings 1.04 ':early';
 use Test::Deep 0.110;
-use Storable 'freeze';
+use Scalar::Util 'refaddr';
 
 # simulates real code that we are testing
 {
@@ -46,6 +46,7 @@ cmp_deeply(
     methods(
         last_http_request_sent => undef,
         last_http_response_received => undef,
+        last_useragent => undef,
     ),
     'initial state (class)',
 );
@@ -59,6 +60,7 @@ cmp_deeply(
         methods(
             last_http_request_sent => undef,
             last_http_response_received => undef,
+            last_useragent => undef,
         ),
         noclass(superhashof({
             __last_http_request_sent => undef,
@@ -121,6 +123,7 @@ cmp_deeply(
             methods(
                 last_http_request_sent => undef,
                 last_http_response_received => undef,
+                last_useragent => isa('LWP::UserAgent'),
             ),
             noclass(superhashof({
                 __last_http_request_sent => undef,
@@ -167,8 +170,8 @@ sub test_send_request
     # response is what we stored in the useragent
     isa_ok($response, 'HTTP::Response');
     is(
-        freeze($MyApp::useragent->last_http_response_received),
-        freeze($response),
+        refaddr($MyApp::useragent->last_http_response_received),
+        refaddr($response),
         'last_http_response_received',
     );
 
@@ -181,6 +184,18 @@ sub test_send_request
             ),
         ),
         "$name request",
+    );
+
+    is(
+        refaddr($MyApp::useragent->last_useragent),
+        refaddr($MyApp::useragent),
+        'last_useragent (class method)',
+    );
+
+    cmp_deeply(
+        refaddr(Test::LWP::UserAgent->last_useragent),
+        refaddr($MyApp::useragent),
+        'last_useragent (instance method)',
     );
 
     cmp_deeply(
