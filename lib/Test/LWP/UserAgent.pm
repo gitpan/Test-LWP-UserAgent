@@ -1,8 +1,8 @@
 package Test::LWP::UserAgent;
 {
-  $Test::LWP::UserAgent::VERSION = '0.008';
+  $Test::LWP::UserAgent::VERSION = '0.009';
 }
-# git description: v0.007-13-g3da0314
+# git description: v0.008-2-g67f3e1b
 
 # ABSTRACT: a LWP::UserAgent suitable for simulating and testing network calls
 
@@ -83,6 +83,7 @@ sub map_network_response
 
     if (blessed $self)
     {
+        # we cannot call ::request here, or we end up in an infinite loop
         push @{$self->{__response_map}},
             [ $request_description, sub { $self->SUPER::send_request($_[0]) } ];
     }
@@ -256,6 +257,8 @@ sub send_request
                     (my $status = $exception) =~ s/\n.*//s;
                     $status =~ s/ at .* line \d+.*//s;  # remove file/line number
                     my $code = ($status =~ s/^(\d\d\d)\s+//) ? $1 : HTTP_INTERNAL_SERVER_ERROR;
+                    # note that _new_response did not always take a fourth
+                    # parameter - content used to always be "$code $message"
                     $response = LWP::UserAgent::_new_response($request, $code, $status, $full);
                 }
             }
@@ -302,7 +305,7 @@ Test::LWP::UserAgent - a LWP::UserAgent suitable for simulating and testing netw
 
 =head1 VERSION
 
-version 0.008
+version 0.009
 
 =head1 SYNOPSIS
 

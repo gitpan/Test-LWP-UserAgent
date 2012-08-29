@@ -56,7 +56,7 @@
    "provides" : {
       "Test::LWP::UserAgent" : {
          "file" : "lib/Test/LWP/UserAgent.pm",
-         "version" : "0.008"
+         "version" : "0.009"
       }
    },
    "release_status" : "stable",
@@ -68,7 +68,7 @@
          "web" : "https://github.com/karenetheridge/Test-LWP-UserAgent"
       }
    },
-   "version" : "0.008",
+   "version" : "0.009",
    "x_Dist_Zilla" : {
       "plugins" : [
          {
