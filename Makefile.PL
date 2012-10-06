@@ -38,15 +38,17 @@ my %WriteMakefileArgs = (
     "HTTP::Response" => 0,
     "HTTP::Status" => 0,
     "LWP::UserAgent" => 0,
+    "Safe::Isa" => 0,
     "Scalar::Util" => 0,
     "Storable" => 0,
     "Try::Tiny" => 0,
     "URI" => 0,
+    "namespace::clean" => 0,
     "parent" => 0,
     "strict" => 0,
     "warnings" => 0
   },
-  "VERSION" => "0.009",
+  "VERSION" => "0.010",
   "test" => {
     "TESTS" => "t/*.t"
   }

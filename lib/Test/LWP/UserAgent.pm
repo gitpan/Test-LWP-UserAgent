@@ -1,8 +1,8 @@
 package Test::LWP::UserAgent;
 {
-  $Test::LWP::UserAgent::VERSION = '0.009';
+  $Test::LWP::UserAgent::VERSION = '0.010';
 }
-# git description: v0.008-2-g67f3e1b
+# git description: v0.009-6-gc825d52
 
 # ABSTRACT: a LWP::UserAgent suitable for simulating and testing network calls
 
@@ -18,6 +18,8 @@ use URI;
 use HTTP::Date;
 use HTTP::Status qw(:constants status_message);
 use Try::Tiny;
+use Safe::Isa;
+use namespace::clean;
 
 my @response_map;
 my $network_fallback;
@@ -63,9 +65,9 @@ sub map_response
         return;
     }
 
-    warn "map_response: response is not an HTTP::Response, it's a ",
+    warn "map_response: response is not a coderef or an HTTP::Response, it's a ",
             (blessed($response) || 'non-object')
-        unless eval { \&$response } or eval { $response->isa('HTTP::Response') };
+        unless eval { \&$response } or $response->$_isa('HTTP::Response');
 
     if (blessed $self)
     {
@@ -203,7 +205,7 @@ sub send_request
         next if not defined $entry;
         my ($request_desc, $response) = @$entry;
 
-        if (eval { $request_desc->isa('HTTP::Request') })
+        if ($request_desc->$_isa('HTTP::Request'))
         {
             $matched_response = $response, last
                 if freeze($request) eq freeze($request_desc);
@@ -218,7 +220,7 @@ sub send_request
             $matched_response = $response, last
                 if eval { $request_desc->($request) };
 
-            $uri = URI->new($uri) if not eval { $uri->isa('URI') };
+            $uri = URI->new($uri) if not $uri->$_isa('URI');
             $matched_response = $response, last
                 if $uri->host eq $request_desc;
         }
@@ -247,7 +249,7 @@ sub send_request
             $response = try { $response->($request) }
             catch {
                 my $exception = $_;
-                if (eval { $exception->isa('HTTP::Response') })
+                if ($exception->$_isa('HTTP::Response'))
                 {
                     $response = $exception;
                 }
@@ -269,7 +271,7 @@ sub send_request
         }
     }
 
-    if (not eval { $response->isa('HTTP::Response') })
+    if (not $response->$_isa('HTTP::Response'))
     {
         warn "response from coderef is not a HTTP::Response, it's a ",
             (blessed($response) || 'non-object');
@@ -296,7 +298,6 @@ sub __is_regexp($)
 
 1;
 
-
 =pod
 
 =head1 NAME
@@ -305,11 +306,11 @@ Test::LWP::UserAgent - a LWP::UserAgent suitable for simulating and testing netw
 
 =head1 VERSION
 
-version 0.009
+version 0.010
 
 =head1 SYNOPSIS
 
-In your real code:
+In your application code:
 
     use URI;
     use HTTP::Request::Common;
@@ -557,6 +558,8 @@ The last L<HTTP::Request> object that this object (if called on an object) or
 module (if called as a class method) processed, whether or not it matched a
 mapping you set up earlier.
 
+Note that this is also available via C<< last_http_response_received->request >>.
+
 =item * C<last_http_response_received>
 
 The last L<HTTP::Response> object that this module returned, as a result of a
@@ -594,8 +597,12 @@ All other methods from L<LWP::UserAgent> are available unchanged.
 
 =head1 Use with SOAP requests
 
-To use this module when communicating with a SOAP server (either a real one,
-with live network requests, see above ... link here ..., or with one simulated
+=over
+
+=item * L<SOAP::Lite>
+
+To use this module when communicating via L<SOAP::Lite> with a SOAP server (either a real one,
+with live network requests, L<see above|/network_fallback> or with one simulated
 with mapped responses), simply do this:
 
     use SOAP::Lite;
@@ -603,6 +610,23 @@ with mapped responses), simply do this:
     $SOAP::Transport::HTTP::Client::USERAGENT_CLASS = 'Test::LWP::UserAgent';
 
 See also L<SOAP::Transport/CHANGING THE DEFAULT USERAGENT CLASS>.
+
+=item * L<XML::Compile::SOAP>
+
+When using L<XML::Compile::SOAP> with a compiled WSDL, you can change the
+useragent object via L<XML::Compile::Transport::SOAPHTTP>:
+
+    my $call = $wsdl->compileClient(
+        $interface_name,
+        transport => XML::Compile::Transport::SOAPHTTP->new(
+            user_agent => $useragent,
+            address => $wsdl->endPoint,
+        ),
+    );
+
+See also L<XML::Compile::SOAP::FAQ/Adding HTTP headers>.
+
+=back
 
 =head1 MOTIVATION
 
@@ -653,7 +677,6 @@ This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
 
 =cut
-
 
 __END__
 
