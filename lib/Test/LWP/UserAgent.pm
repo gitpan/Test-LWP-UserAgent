@@ -1,16 +1,19 @@
 package Test::LWP::UserAgent;
 {
-  $Test::LWP::UserAgent::VERSION = '0.010';
+  $Test::LWP::UserAgent::VERSION = '0.011';
 }
-# git description: v0.009-6-gc825d52
+# git description: v0.010-6-gb9ec5de
 
+BEGIN {
+  $Test::LWP::UserAgent::AUTHORITY = 'cpan:ETHER';
+}
 # ABSTRACT: a LWP::UserAgent suitable for simulating and testing network calls
 
 use strict;
 use warnings;
 
 use parent 'LWP::UserAgent';
-use Scalar::Util 'blessed';
+use Scalar::Util qw(blessed reftype);
 use Storable 'freeze';
 use HTTP::Request;
 use HTTP::Response;
@@ -25,15 +28,20 @@ my @response_map;
 my $network_fallback;
 my $last_useragent;
 
+sub __isa_coderef($);
+sub __is_regexp($);
+
 sub new
 {
     my ($class, %options) = @_;
+
+    my $_network_fallback = delete $options{network_fallback};
 
     my $self = $class->SUPER::new(%options);
     $self->{__last_http_request_sent} = undef;
     $self->{__last_http_response_received} = undef;
     $self->{__response_map} = [];
-    $self->{__network_fallback} = $options{network_fallback};
+    $self->{__network_fallback} = $_network_fallback;
 
     # strips default User-Agent header added by LWP::UserAgent, to make it
     # easier to define literal HTTP::Requests to match against
@@ -67,7 +75,7 @@ sub map_response
 
     warn "map_response: response is not a coderef or an HTTP::Response, it's a ",
             (blessed($response) || 'non-object')
-        unless eval { \&$response } or $response->$_isa('HTTP::Response');
+        unless __isa_coderef($response) or $response->$_isa('HTTP::Response');
 
     if (blessed $self)
     {
@@ -120,7 +128,7 @@ sub register_psgi
     return $self->map_response($domain, undef) if not defined $app;
 
     warn "register_psgi: app is not a coderef, it's a ", ref($app)
-        unless eval { \&$app };
+        unless __isa_coderef($app);
 
     warn "register_psgi: did you forget to load HTTP::Message::PSGI?"
         unless HTTP::Request->can('to_psgi') and HTTP::Response->can('from_psgi');
@@ -215,11 +223,13 @@ sub send_request
             $matched_response = $response, last
                 if $uri =~ $request_desc;
         }
-        else
+        elsif (__isa_coderef $request_desc)
         {
             $matched_response = $response, last
-                if eval { $request_desc->($request) };
-
+                if $request_desc->($request);
+        }
+        else
+        {
             $uri = URI->new($uri) if not $uri->$_isa('URI');
             $matched_response = $response, last
                 if $uri->host eq $request_desc;
@@ -241,7 +251,7 @@ sub send_request
         ? $matched_response
         : HTTP::Response->new(404);
 
-    if (eval { \&$response })
+    if (__isa_coderef $response)
     {
         # emulates handling in LWP::UserAgent::send_request
         if ($self->use_eval)
@@ -291,6 +301,13 @@ sub send_request
     return $response;
 }
 
+sub __isa_coderef($)
+{
+    ref $_[0] eq 'CODE'
+        or (reftype($_[0]) || '') eq 'CODE'
+        or overload::Method($_[0], '&{}')
+}
+
 sub __is_regexp($)
 {
     $^V < 5.009005 ? ref(shift) eq 'Regexp' : re::is_regexp(shift);
@@ -306,7 +323,7 @@ Test::LWP::UserAgent - a LWP::UserAgent suitable for simulating and testing netw
 
 =head1 VERSION
 
-version 0.010
+version 0.011
 
 =head1 SYNOPSIS
 

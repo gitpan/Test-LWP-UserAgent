@@ -17,6 +17,7 @@ t/04-psgi.t
 t/05-exceptions.t
 t/06-network-fallback.t
 t/07-mask-response.t
+t/08-isa-coderef.t
 t/release-changes_has_content.t
 t/release-clean-namespaces.t
 t/release-cpan-changes.t
