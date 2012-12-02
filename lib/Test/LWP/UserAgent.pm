@@ -1,8 +1,8 @@
 package Test::LWP::UserAgent;
 {
-  $Test::LWP::UserAgent::VERSION = '0.011';
+  $Test::LWP::UserAgent::VERSION = '0.012';
 }
-# git description: v0.010-6-gb9ec5de
+# git description: v0.011-14-g6326c20
 
 BEGIN {
   $Test::LWP::UserAgent::AUTHORITY = 'cpan:ETHER';
@@ -162,8 +162,8 @@ sub last_http_request_sent
     return blessed($self)
         ? $self->{__last_http_request_sent}
         : $last_useragent
-        ? $last_useragent->last_http_request_sent
-        : undef;
+            ? $last_useragent->last_http_request_sent
+            : undef;
 }
 
 sub last_http_response_received
@@ -172,8 +172,8 @@ sub last_http_response_received
     return blessed($self)
         ? $self->{__last_http_response_received}
         : $last_useragent
-        ? $last_useragent->last_http_response_received
-        : undef;
+            ? $last_useragent->last_http_response_received
+            : undef;
 }
 
 sub last_useragent
@@ -323,7 +323,7 @@ Test::LWP::UserAgent - a LWP::UserAgent suitable for simulating and testing netw
 
 =head1 VERSION
 
-version 0.011
+version 0.012
 
 =head1 SYNOPSIS
 
@@ -612,7 +612,7 @@ in which case unmatched requests will be delivered to the network.)
 
 All other methods from L<LWP::UserAgent> are available unchanged.
 
-=head1 Use with SOAP requests
+=head1 Usage with SOAP requests
 
 =over
 
@@ -625,6 +625,8 @@ with mapped responses), simply do this:
     use SOAP::Lite;
     use SOAP::Transport::HTTP;
     $SOAP::Transport::HTTP::Client::USERAGENT_CLASS = 'Test::LWP::UserAgent';
+
+You must then make all your configuration changes and mappings globally.
 
 See also L<SOAP::Transport/CHANGING THE DEFAULT USERAGENT CLASS>.
 
@@ -680,7 +682,7 @@ L<Test::Mock::LWP::UserAgent>
 
 L<LWP::UserAgent>
 
-L<PSGI>, L<HTTP::Message::PSGI>
+L<PSGI>, L<HTTP::Message::PSGI>, L<LWP::Protocol::PSGI>
 
 =head1 AUTHOR
 
