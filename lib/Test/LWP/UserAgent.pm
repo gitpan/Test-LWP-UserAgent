@@ -1,8 +1,8 @@
 package Test::LWP::UserAgent;
 {
-  $Test::LWP::UserAgent::VERSION = '0.013';
+  $Test::LWP::UserAgent::VERSION = '0.014';
 }
-# git description: v0.012-4-gdee17fd
+# git description: v0.013-1-g91a78b7
 
 BEGIN {
   $Test::LWP::UserAgent::AUTHORITY = 'cpan:ETHER';
@@ -323,7 +323,7 @@ Test::LWP::UserAgent - a LWP::UserAgent suitable for simulating and testing netw
 
 =head1 VERSION
 
-version 0.013
+version 0.014
 
 =head1 SYNOPSIS
 
@@ -681,7 +681,7 @@ module, and from where I borrowed some aspects of the API.
 
 =head1 SEE ALSO
 
-L<http://www.perladvent.org/2012/2012-12-12.html|entry for Perl Advent 2012>
+L<entry for Perl Advent 2012|http://www.perladvent.org/2012/2012-12-12.html>
 
 L<Test::Mock::LWP::Dispatch>
 

@@ -27,7 +27,7 @@ name: Test-LWP-UserAgent
 provides:
   Test::LWP::UserAgent:
     file: lib/Test/LWP/UserAgent.pm
-    version: 0.013
+    version: 0.014
 requires:
   HTTP::Date: 0
   HTTP::Request: 0
@@ -47,7 +47,7 @@ requires:
 resources:
   homepage: https://github.com/karenetheridge/Test-LWP-UserAgent
   repository: https://github.com/karenetheridge/Test-LWP-UserAgent.git
-version: 0.013
+version: 0.014
 x_Dist_Zilla:
   perl:
     version: 5.016002
