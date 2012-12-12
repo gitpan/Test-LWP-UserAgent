@@ -1,8 +1,8 @@
 package Test::LWP::UserAgent;
 {
-  $Test::LWP::UserAgent::VERSION = '0.012';
+  $Test::LWP::UserAgent::VERSION = '0.013';
 }
-# git description: v0.011-14-g6326c20
+# git description: v0.012-4-gdee17fd
 
 BEGIN {
   $Test::LWP::UserAgent::AUTHORITY = 'cpan:ETHER';
@@ -323,7 +323,7 @@ Test::LWP::UserAgent - a LWP::UserAgent suitable for simulating and testing netw
 
 =head1 VERSION
 
-version 0.012
+version 0.013
 
 =head1 SYNOPSIS
 
@@ -664,6 +664,11 @@ throughout. It provides a method (C<last_http_request_sent>) to access the last
 L<HTTP::Request>, for testing things like the URI and headers that your code
 sent to L<LWP::UserAgent>.
 
+=head1 SUPPORT
+
+Bugs may be submitted through L<https://rt.cpan.org/Public/Dist/Display.html?Name=Test-LWP-UserAgent>.
+I am also usually active on irc, as 'ether' at L<irc://irc.perl.org>.
+
 =head1 ACKNOWLEDGEMENTS
 
 L<AirG Inc.|http://corp.airg.com>, my employer, and the first user of this distribution.
@@ -675,6 +680,8 @@ Also Yury Zavarin, whose L<Test::Mock::LWP::Dispatch> inspired me to write this
 module, and from where I borrowed some aspects of the API.
 
 =head1 SEE ALSO
+
+L<http://www.perladvent.org/2012/2012-12-12.html|entry for Perl Advent 2012>
 
 L<Test::Mock::LWP::Dispatch>
 

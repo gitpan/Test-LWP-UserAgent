@@ -1,5 +1,9 @@
 Revision history for Test-LWP-UserAgent
 
+0.013     2012-12-12 10:24:49 PST-0800 (Karen Etheridge)
+          - silly mistake in examples/application_client_test.pl fixed
+          - link to today's Perl Advent Calendar entry, about this module :)
+
 0.012     2012-12-01 22:57:01 PST-0800 (Karen Etheridge)
           - examples/ directory added, containing fleshed-out code snippets
             used in the article for the 2012 Perl Advent Calendar, and a
