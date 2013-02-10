@@ -1,8 +1,8 @@
 package Test::LWP::UserAgent;
 {
-  $Test::LWP::UserAgent::VERSION = '0.014';
+  $Test::LWP::UserAgent::VERSION = '0.015';
 }
-# git description: v0.013-1-g91a78b7
+# git description: v0.014-14-g68d7af1
 
 BEGIN {
   $Test::LWP::UserAgent::AUTHORITY = 'cpan:ETHER';
@@ -71,6 +71,13 @@ sub map_response
             if not $matched;
 
         return;
+    }
+
+    if (not $response->$_isa('HTTP::Response') and try { $response->can('request') })
+    {
+        my $oldres = $response;
+        $response = sub {
+            $oldres->request($_[0]) };
     }
 
     warn "map_response: response is not a coderef or an HTTP::Response, it's a ",
@@ -196,8 +203,6 @@ sub network_fallback
     $network_fallback = $value;
 }
 
-sub __is_regexp($);
-
 sub send_request
 {
     my ($self, $request) = @_;
@@ -315,6 +320,8 @@ sub __is_regexp($)
 
 1;
 
+__END__
+
 =pod
 
 =head1 NAME
@@ -323,7 +330,7 @@ Test::LWP::UserAgent - a LWP::UserAgent suitable for simulating and testing netw
 
 =head1 VERSION
 
-version 0.014
+version 0.015
 
 =head1 SYNOPSIS
 
@@ -381,7 +388,7 @@ And then:
 
     # <now test that your code responded to the 200 response properly...>
 
-This feature is useful for testing your PSGI apps (you may or may not find
+This feature is useful for testing your PSGI applications (you may or may not find
 using L<Plack::Test> easier), or for simulating a server so as to test your
 client code.
 
@@ -412,6 +419,10 @@ or:
         200,
         'I should have gotten an OK response',
     );
+
+Note that L<LWP::UserAgent> itself is not monkey-patched - you must use
+this module (or a subclass) to send your request, or it cannot be caught and
+processed.
 
 One common mechanism to swap out the useragent implementation is via a
 lazily-built Moose attribute; if no override is provided at construction time,
@@ -697,14 +708,9 @@ Karen Etheridge <ether@cpan.org>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2012 by Karen Etheridge.
+This software is copyright (c) 2013 by Karen Etheridge.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
 
 =cut
-
-__END__
-
-
-1;
