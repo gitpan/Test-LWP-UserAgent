@@ -9,19 +9,21 @@ use ExtUtils::MakeMaker 6.30;
 
 
 my %WriteMakefileArgs = (
-  "ABSTRACT" => "A LWP::UserAgent suitable for simulating and testing network calls",
+  "ABSTRACT" => "a LWP::UserAgent suitable for simulating and testing network calls",
   "AUTHOR" => "Karen Etheridge <ether\@cpan.org>",
   "BUILD_REQUIRES" => {
     "Class::Load" => 0,
     "File::Find" => 0,
     "File::Temp" => 0,
     "HTTP::Request::Common" => 0,
+    "Path::Tiny" => 0,
     "Test::CheckDeps" => "0.002",
     "Test::Deep" => "0.110",
     "Test::Fatal" => 0,
     "Test::More" => "0.88",
     "Test::NoWarnings" => "1.04",
     "Test::Requires" => 0,
+    "Test::TempDir" => 0,
     "Test::Warn" => 0,
     "overload" => 0
   },
@@ -33,6 +35,7 @@ my %WriteMakefileArgs = (
   "LICENSE" => "perl",
   "NAME" => "Test::LWP::UserAgent",
   "PREREQ_PM" => {
+    "Carp" => 0,
     "HTTP::Date" => 0,
     "HTTP::Request" => 0,
     "HTTP::Response" => 0,
@@ -48,7 +51,7 @@ my %WriteMakefileArgs = (
     "strict" => 0,
     "warnings" => 0
   },
-  "VERSION" => "0.015",
+  "VERSION" => "0.016",
   "test" => {
     "TESTS" => "t/*.t"
   }

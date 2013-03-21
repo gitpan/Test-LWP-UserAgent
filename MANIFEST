@@ -6,6 +6,7 @@ META.json
 META.yml
 Makefile.PL
 README
+advent_2012.pod
 dist.ini
 examples/MyApp/Client.pm
 examples/advent_2012_1.pl
@@ -24,13 +25,16 @@ t/05-exceptions.t
 t/06-network-fallback.t
 t/07-mask-response.t
 t/08-isa-coderef.t
-t/09_dispatch_to_request_method.t
+t/09-dispatch-to-request-method.t
+t/10-request-args-network.t
+t/11-request-args-internal.t
 xt/author/pod-spell.t
 xt/release/changes_has_content.t
 xt/release/clean-namespaces.t
 xt/release/cpan-changes.t
 xt/release/distmeta.t
 xt/release/eol.t
+xt/release/kwalitee.t
 xt/release/minimum-version.t
 xt/release/no-tabs.t
 xt/release/pod-coverage.t

@@ -1,16 +1,15 @@
+use strict;
+use warnings;
 package Test::LWP::UserAgent;
 {
-  $Test::LWP::UserAgent::VERSION = '0.015';
+  $Test::LWP::UserAgent::VERSION = '0.016';
 }
-# git description: v0.014-14-g68d7af1
+# git description: v0.015-27-gd7eeeac
 
 BEGIN {
   $Test::LWP::UserAgent::AUTHORITY = 'cpan:ETHER';
 }
 # ABSTRACT: a LWP::UserAgent suitable for simulating and testing network calls
-
-use strict;
-use warnings;
 
 use parent 'LWP::UserAgent';
 use Scalar::Util qw(blessed reftype);
@@ -22,14 +21,12 @@ use HTTP::Date;
 use HTTP::Status qw(:constants status_message);
 use Try::Tiny;
 use Safe::Isa;
+use Carp;
 use namespace::clean;
 
 my @response_map;
 my $network_fallback;
 my $last_useragent;
-
-sub __isa_coderef($);
-sub __is_regexp($);
 
 sub new
 {
@@ -80,7 +77,7 @@ sub map_response
             $oldres->request($_[0]) };
     }
 
-    warn "map_response: response is not a coderef or an HTTP::Response, it's a ",
+    carp 'map_response: response is not a coderef or an HTTP::Response, it\'s a ',
             (blessed($response) || 'non-object')
         unless __isa_coderef($response) or $response->$_isa('HTTP::Response');
 
@@ -122,7 +119,7 @@ sub unmap_all
     }
     else
     {
-        warn 'instance-only unmap requests make no sense when called globally'
+        carp 'instance-only unmap requests make no sense when called globally'
             if $instance_only;
         @response_map = ();
     }
@@ -134,10 +131,10 @@ sub register_psgi
 
     return $self->map_response($domain, undef) if not defined $app;
 
-    warn "register_psgi: app is not a coderef, it's a ", ref($app)
+    carp 'register_psgi: app is not a coderef, it\'s a ', ref($app)
         unless __isa_coderef($app);
 
-    warn "register_psgi: did you forget to load HTTP::Message::PSGI?"
+    carp 'register_psgi: did you forget to load HTTP::Message::PSGI?'
         unless HTTP::Request->can('to_psgi') and HTTP::Response->can('from_psgi');
 
     return $self->map_response(
@@ -205,10 +202,10 @@ sub network_fallback
 
 sub send_request
 {
-    my ($self, $request) = @_;
+    my ($self, $request, $arg, $size) = @_;
 
-    $self->progress("begin", $request);
-    my $matched_response = $self->run_handlers("request_send", $request);
+    $self->progress('begin', $request);
+    my $matched_response = $self->run_handlers('request_send', $request);
 
     my $uri = $request->uri;
 
@@ -223,12 +220,12 @@ sub send_request
             $matched_response = $response, last
                 if freeze($request) eq freeze($request_desc);
         }
-        elsif (__is_regexp $request_desc)
+        elsif (__is_regexp($request_desc))
         {
             $matched_response = $response, last
                 if $uri =~ $request_desc;
         }
-        elsif (__isa_coderef $request_desc)
+        elsif (__isa_coderef($request_desc))
         {
             $matched_response = $response, last
                 if $request_desc->($request);
@@ -247,16 +244,16 @@ sub send_request
     if (not defined $matched_response and
         ($self->{__network_fallback} or $network_fallback))
     {
-        my $response = $self->SUPER::send_request($request);
+        my $response = $self->SUPER::send_request($request, $arg, $size);
         $self->{__last_http_response_received} = $response;
         return $response;
     }
 
     my $response = defined $matched_response
         ? $matched_response
-        : HTTP::Response->new(404);
+        : HTTP::Response->new('404');
 
-    if (__isa_coderef $response)
+    if (__isa_coderef($response))
     {
         # emulates handling in LWP::UserAgent::send_request
         if ($self->use_eval)
@@ -288,32 +285,45 @@ sub send_request
 
     if (not $response->$_isa('HTTP::Response'))
     {
-        warn "response from coderef is not a HTTP::Response, it's a ",
+        carp 'response from coderef is not a HTTP::Response, it\'s a ',
             (blessed($response) || 'non-object');
         $response = LWP::UserAgent::_new_response($request, HTTP_INTERNAL_SERVER_ERROR, status_message(HTTP_INTERNAL_SERVER_ERROR));
     }
     else
     {
         $response->request($request);  # record request for reference
-        $response->header("Client-Date" => HTTP::Date::time2str(time));
+        $response->header('Client-Date' => HTTP::Date::time2str(time));
     }
 
-    $self->run_handlers("response_done", $response);
-    $self->progress("end", $response);
+    # handle any additional arguments that were provided, such as saving the
+    # content to a file.  this also runs additional handlers for us.
+    my $protocol = LWP::Protocol->new('no-schemes-from-TLWPUA', $self);
+    my $complete;
+    $response = $protocol->collect($arg, $response, sub {
+        # remove content from $response and stream it back
+        return if $complete;
+        my $content = $response->content;
+        $response->content('');
+        $complete++;
+        \$content;
+    });
+
+    $self->run_handlers('response_done', $response);
+    $self->progress('end', $response);
 
     $self->{__last_http_response_received} = $response;
 
     return $response;
 }
 
-sub __isa_coderef($)
+sub __isa_coderef
 {
     ref $_[0] eq 'CODE'
         or (reftype($_[0]) || '') eq 'CODE'
         or overload::Method($_[0], '&{}')
 }
 
-sub __is_regexp($)
+sub __is_regexp
 {
     $^V < 5.009005 ? ref(shift) eq 'Regexp' : re::is_regexp(shift);
 }
@@ -330,7 +340,7 @@ Test::LWP::UserAgent - a LWP::UserAgent suitable for simulating and testing netw
 
 =head1 VERSION
 
-version 0.015
+version 0.016
 
 =head1 SYNOPSIS
 
@@ -343,7 +353,7 @@ In your application code:
     my $ua = $self->useragent || LWP::UserAgent->new;
 
     my $uri = URI->new('http://example.com');
-    $uri->port(3000);
+    $uri->port('3000');
     $uri->path('success');
     my $request = POST($uri, a => 1);
     my $response = $ua->request($request);
@@ -354,16 +364,16 @@ Then, in your tests:
     use Test::More;
 
     Test::LWP::UserAgent->map_response(
-        qr{example.com/success}, HTTP::Response->new(200, 'OK', ['Content-Type' => 'text/plain'], ''));
+        qr{example.com/success}, HTTP::Response->new('200', 'OK', ['Content-Type' => 'text/plain'], ''));
     Test::LWP::UserAgent->map_response(
-        qr{example.com/fail}, HTTP::Response->new(500, 'ERROR', ['Content-Type' => 'text/plain'], ''));
+        qr{example.com/fail}, HTTP::Response->new('500', 'ERROR', ['Content-Type' => 'text/plain'], ''));
     Test::LWP::UserAgent->map_response(
         qr{example.com/conditional},
         sub {
             my $request = shift;
             my $success = $request->uri =~ /success/;
             return HTTP::Response->new(
-                ($success ? ( 200, 'OK') : (500, 'ERROR'),
+                ($success ? ( '200', 'OK') : ('500', 'ERROR'),
                 ['Content-Type' => 'text/plain'], '')
             )
         },
@@ -375,7 +385,7 @@ OR, you can use a L<PSGI> app to handle the requests:
     Test::LWP::UserAgent->register_psgi('example.com' => sub {
         my $env = shift;
         # logic here...
-        [ 200, [ 'Content-Type' => 'text/plain' ], [ 'some body' ] ],
+        [ '200', [ 'Content-Type' => 'text/plain' ], [ 'some body' ] ],
     );
 
 And then:
@@ -416,7 +426,7 @@ or:
     );
     is(
         $useragent->last_http_response_received->code,
-        200,
+        '200',
         'I should have gotten an OK response',
     );
 
@@ -478,7 +488,7 @@ The string is matched identically against the C<host> field of the L<URI> in the
 
 Example:
 
-    $test_ua->map_response('example.com', HTTP::Response->new(500));
+    $test_ua->map_response('example.com', HTTP::Response->new('500'));
 
 =item * regexp
 
@@ -486,8 +496,8 @@ The regexp is matched against the URI in the request.
 
 Example:
 
-    $test_ua->map_response(qr{foo/bar}, HTTP::Response->new(200));
-    $test_ua->map_response(qr{baz/quux}, HTTP::Response->new(500));
+    $test_ua->map_response(qr{foo/bar}, HTTP::Response->new('200'));
+    $test_ua->map_response(qr{baz/quux}, HTTP::Response->new('500'));
 
 =item * code
 
@@ -498,7 +508,7 @@ returns a boolean indicating if there is a match.
             my $request = shift;
             return 1 if $request->method eq 'GET' || $request->method eq 'POST';
         },
-        HTTP::Response->new(200),
+        HTTP::Response->new('200'),
     );
 
 =item * L<HTTP::Request> object
@@ -677,8 +687,9 @@ sent to L<LWP::UserAgent>.
 
 =head1 SUPPORT
 
-Bugs may be submitted through L<https://rt.cpan.org/Public/Dist/Display.html?Name=Test-LWP-UserAgent>.
-I am also usually active on irc, as 'ether' at L<irc://irc.perl.org>.
+Bugs may be submitted through L<the RT bug tracker|https://rt.cpan.org/Public/Dist/Display.html?Name=Test-LWP-UserAgent>
+(or L<bug-Test-LWP-UserAgent@rt.cpan.org>).
+I am also usually active on irc, as 'ether' at C<irc.perl.org>.
 
 =head1 ACKNOWLEDGEMENTS
 

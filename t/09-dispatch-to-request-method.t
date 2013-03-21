@@ -23,7 +23,7 @@ use Test::LWP::UserAgent;
     sub request
     {
         my ($self, $request) = @_;
-        HTTP::Response->new(200, undef, [], 'response from ' . $request->uri);
+        HTTP::Response->new('200', undef, [], 'response from ' . $request->uri);
     }
 }
 
@@ -35,7 +35,7 @@ $useragent->map_response('bar.com', MyDispatcher->new);
 
 warning_is
     { $useragent->map_response('null.com', 'Foo') }
-    "map_response: response is not a coderef or an HTTP::Response, it's a non-object",
+    'map_response: response is not a coderef or an HTTP::Response, it\'s a non-object',
     'appropriate warning when creating a bad mapping',
 ;
 
@@ -44,7 +44,7 @@ cmp_deeply(
     all(
         isa('HTTP::Response'),
         methods(
-            code => 200,
+            code => '200',
             content => 'response from http://foo.com',
         ),
     ),
@@ -56,7 +56,7 @@ cmp_deeply(
     all(
         isa('HTTP::Response'),
         methods(
-            code => 200,
+            code => '200',
             content => 'response from http://bar.com',
         ),
     ),
@@ -70,13 +70,13 @@ warning_is
             all(
                 isa('HTTP::Response'),
                 methods(
-                    code => 500,
+                    code => '500',
                 ),
             ),
             'cannot dispatch to a bare string',
         );
     }
-    "response from coderef is not a HTTP::Response, it's a non-object",
+    'response from coderef is not a HTTP::Response, it\'s a non-object',
     'appropriate warning when attempting to dispatch inappropriately',
 ;
 

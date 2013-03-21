@@ -1,5 +1,9 @@
 Revision history for Test-LWP-UserAgent
 
+0.016     2013-03-20 23:01:47 PDT-0700 (Karen Etheridge)
+          - fixed handling of methods such as mirror() (RT#84094) - thanks for
+            the report, Tom Hukins!
+
 0.015     2013-02-09 16:55:18 PST-0800 (Karen Etheridge)
           - can now create a mapping on a class name or an object where that
             class or object implements the 'request' method (from a suggestion

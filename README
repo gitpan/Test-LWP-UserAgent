@@ -1,9 +1,9 @@
 
 
 This archive contains the distribution Test-LWP-UserAgent,
-version 0.015:
+version 0.016:
 
-  A LWP::UserAgent suitable for simulating and testing network calls
+  a LWP::UserAgent suitable for simulating and testing network calls
 
 This software is copyright (c) 2013 by Karen Etheridge.
 
