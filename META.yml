@@ -34,7 +34,7 @@ no_index:
 provides:
   Test::LWP::UserAgent:
     file: lib/Test/LWP/UserAgent.pm
-    version: 0.016
+    version: 0.017
 requires:
   Carp: 0
   HTTP::Date: 0
@@ -55,10 +55,10 @@ requires:
 resources:
   homepage: http://metacpan.org/module/Test::LWP::UserAgent
   repository: https://github.com/karenetheridge/Test-LWP-UserAgent.git
-version: 0.016
+version: 0.017
 x_Dist_Zilla:
   perl:
-    version: 5.016001
+    version: 5.016003
   plugins:
     -
       class: Dist::Zilla::Plugin::Git::GatherDir

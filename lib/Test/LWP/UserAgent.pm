@@ -2,9 +2,9 @@ use strict;
 use warnings;
 package Test::LWP::UserAgent;
 {
-  $Test::LWP::UserAgent::VERSION = '0.016';
+  $Test::LWP::UserAgent::VERSION = '0.017';
 }
-# git description: v0.015-27-gd7eeeac
+# git description: v0.016-1-gc594557
 
 BEGIN {
   $Test::LWP::UserAgent::AUTHORITY = 'cpan:ETHER';
@@ -301,7 +301,7 @@ sub send_request
     my $complete;
     $response = $protocol->collect($arg, $response, sub {
         # remove content from $response and stream it back
-        return if $complete;
+        return \'' if $complete;
         my $content = $response->content;
         $response->content('');
         $complete++;
@@ -340,7 +340,7 @@ Test::LWP::UserAgent - a LWP::UserAgent suitable for simulating and testing netw
 
 =head1 VERSION
 
-version 0.016
+version 0.017
 
 =head1 SYNOPSIS
 
