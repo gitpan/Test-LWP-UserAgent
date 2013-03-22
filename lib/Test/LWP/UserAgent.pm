@@ -2,9 +2,9 @@ use strict;
 use warnings;
 package Test::LWP::UserAgent;
 {
-  $Test::LWP::UserAgent::VERSION = '0.017';
+  $Test::LWP::UserAgent::VERSION = '0.018';
 }
-# git description: v0.016-1-gc594557
+# git description: v0.017-1-gfc1a370
 
 BEGIN {
   $Test::LWP::UserAgent::AUTHORITY = 'cpan:ETHER';
@@ -217,6 +217,7 @@ sub send_request
 
         if ($request_desc->$_isa('HTTP::Request'))
         {
+            local $Storable::canonical = 1;
             $matched_response = $response, last
                 if freeze($request) eq freeze($request_desc);
         }
@@ -340,7 +341,7 @@ Test::LWP::UserAgent - a LWP::UserAgent suitable for simulating and testing netw
 
 =head1 VERSION
 
-version 0.017
+version 0.018
 
 =head1 SYNOPSIS
 
