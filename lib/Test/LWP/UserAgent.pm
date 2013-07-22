@@ -2,9 +2,9 @@ use strict;
 use warnings;
 package Test::LWP::UserAgent;
 {
-  $Test::LWP::UserAgent::VERSION = '0.018';
+  $Test::LWP::UserAgent::VERSION = '0.019';
 }
-# git description: v0.017-1-gfc1a370
+# git description: v0.018-18-g907b3eb
 
 BEGIN {
   $Test::LWP::UserAgent::AUTHORITY = 'cpan:ETHER';
@@ -326,7 +326,7 @@ sub __isa_coderef
 
 sub __is_regexp
 {
-    $^V < 5.009005 ? ref(shift) eq 'Regexp' : re::is_regexp(shift);
+    re->can('is_regexp') ? re::is_regexp(shift) : ref(shift) eq 'Regexp';
 }
 
 1;
@@ -335,13 +335,17 @@ __END__
 
 =pod
 
+=encoding utf-8
+
+=for :stopwords Karen Etheridge useragent ORed WSDL irc AirG Yury Zavarin
+
 =head1 NAME
 
 Test::LWP::UserAgent - a LWP::UserAgent suitable for simulating and testing network calls
 
 =head1 VERSION
 
-version 0.018
+version 0.019
 
 =head1 SYNOPSIS
 
@@ -351,57 +355,49 @@ In your application code:
     use HTTP::Request::Common;
     use LWP::UserAgent;
 
-    my $ua = $self->useragent || LWP::UserAgent->new;
+    my $useragent = $self->useragent || LWP::UserAgent->new;
 
     my $uri = URI->new('http://example.com');
     $uri->port('3000');
     $uri->path('success');
     my $request = POST($uri, a => 1);
-    my $response = $ua->request($request);
+    my $response = $useragent->request($request);
 
 Then, in your tests:
 
     use Test::LWP::UserAgent;
     use Test::More;
 
-    Test::LWP::UserAgent->map_response(
+    my $useragent = Test::LWP::UserAgent->new;
+    $useragent->map_response(
         qr{example.com/success}, HTTP::Response->new('200', 'OK', ['Content-Type' => 'text/plain'], ''));
-    Test::LWP::UserAgent->map_response(
+    $useragent->map_response(
         qr{example.com/fail}, HTTP::Response->new('500', 'ERROR', ['Content-Type' => 'text/plain'], ''));
-    Test::LWP::UserAgent->map_response(
-        qr{example.com/conditional},
-        sub {
-            my $request = shift;
-            my $success = $request->uri =~ /success/;
-            return HTTP::Response->new(
-                ($success ? ( '200', 'OK') : ('500', 'ERROR'),
-                ['Content-Type' => 'text/plain'], '')
-            )
-        },
-    );
 
-OR, you can use a L<PSGI> app to handle the requests:
+    # now, do something that sends a request, and test how your application
+    # responds to that response
 
-    use HTTP::Message::PSGI;
-    Test::LWP::UserAgent->register_psgi('example.com' => sub {
-        my $env = shift;
-        # logic here...
-        [ '200', [ 'Content-Type' => 'text/plain' ], [ 'some body' ] ],
-    );
+=head1 DESCRIPTION
 
-And then:
+This module is a subclass of L<LWP::UserAgent> which overrides a few key
+low-level methods that are concerned with actually sending your request over
+the network, allowing an interception of that request and simulating a
+particular response.  This greatly facilitates testing of client networking
+code where the server follows a known protocol.
 
-    # <something which calls the code being tested...>
+The synopsis describes a classic case where you want to test how your
+application reacts to various responses from the server.  This module will let
+you send back various responses depending on the request, without having to
+set up a real server to test against.  This can be invaluable when you need to
+test edge cases or error conditions that do not normally arise from the
+server.
 
-    my $last_request = Test::LWP::UserAgent->last_http_request_sent;
-    is($last_request->uri, 'http://example.com/success:3000', 'URI');
-    is($last_request->content, 'a=1', 'POST content');
+There are a lot of different ways you can set up the response mappings, and
+hook into this module; see the documentation for the individual interface
+methods.
 
-    # <now test that your code responded to the 200 response properly...>
-
-This feature is useful for testing your PSGI applications (you may or may not find
-using L<Plack::Test> easier), or for simulating a server so as to test your
-client code.
+You can use a L<PSGI> app to handle the requests - see F<examples/call_psgi.t>
+in this dist, and also L</register_psgi> below.
 
 OR, you can route some or all requests through the network as normal, but
 still gain the hooks provided by this class to test what was sent and
@@ -431,6 +427,8 @@ or:
         'I should have gotten an OK response',
     );
 
+=head2 Ensuring the right useragent is used
+
 Note that L<LWP::UserAgent> itself is not monkey-patched - you must use
 this module (or a subclass) to send your request, or it cannot be caught and
 processed.
@@ -438,6 +436,10 @@ processed.
 One common mechanism to swap out the useragent implementation is via a
 lazily-built Moose attribute; if no override is provided at construction time,
 default to C<< LWP::UserAgent->new(%options) >>.
+
+Additionally, most methods can be called as class methods, which will store
+the settings globally, so that any instance of L<Test::LWP::UserAgent> can use
+them, which can simplify some of your application code.
 
 =head1 METHODS
 
@@ -469,12 +471,12 @@ C<< $useragent->network_fallback(<value?>) >>.
 
 =back
 
-All other methods may be called on a specific object instance, or as a class method.
+B<All other methods below may be called on a specific object instance, or as a class method.>
 If called as on a blessed object, the action performed or data returned is
 limited to just that object; if called as a class method, the action or data is
 global.
 
-=item * C<map_response($request_description, $http_response)>
+=item * C<map_response($request_specification, $http_response)>
 
 With this method, you set up what L<HTTP::Response> should be returned for each
 request received.
@@ -487,24 +489,21 @@ The request match specification can be described in multiple ways:
 
 The string is matched identically against the C<host> field of the L<URI> in the request.
 
-Example:
-
     $test_ua->map_response('example.com', HTTP::Response->new('500'));
 
 =item * regexp
 
 The regexp is matched against the URI in the request.
 
-Example:
-
     $test_ua->map_response(qr{foo/bar}, HTTP::Response->new('200'));
     $test_ua->map_response(qr{baz/quux}, HTTP::Response->new('500'));
 
 =item * code
 
-An arbitrary coderef is passed a single argument, the L<HTTP::Request>, and
+The provided coderef is passed a single argument, the L<HTTP::Request>, and
 returns a boolean indicating if there is a match.
 
+    # matches all GET and POST requests
     $test_ua->map_response(sub {
             my $request = shift;
             return 1 if $request->method eq 'GET' || $request->method eq 'POST';
@@ -534,7 +533,7 @@ or
 
 Instance mappings take priority over global (class method) mappings - if no
 matches are found from mappings added to the instance, the global mappings are
-then examined. After no matches have been found, a 404 response is returned.
+then examined. When no matches have been found, a 404 response is returned.
 
 =item * C<map_network_response($request_description)>
 
@@ -574,6 +573,12 @@ calling C<< $test_ua->register_psgi($domain, $app) >> is equivalent to:
         $domain,
         sub { HTTP::Response->from_psgi($app->($_[0]->to_psgi)) },
     );
+
+This feature is useful for testing your PSGI applications, or for simulating
+a server so as to test your client code.
+
+You might find using L<Plack::Test> or L<Plack::Test::ExternalServer> easier
+for your needs, so check those out as well.
 
 =item * C<unregister_psgi($domain, instance_only?)>
 
@@ -674,7 +679,8 @@ See also L<XML::Compile::SOAP::FAQ/Adding HTTP headers>.
 Most mock libraries on the CPAN use L<Test::MockObject>, which is widely considered
 not good practice (among other things, C<@ISA> is violated, it requires
 knowing far too much about the module's internals, and is very clumsy to work
-with).
+with).  (L<This blog entry|hashbang.ca/2011/09/23/mocking-lwpuseragent>
+is one of many that chronicles its issues.)
 
 This module is a direct descendant of L<LWP::UserAgent>, exports nothing into
 your namespace, and all access is via method calls, so it is fully inheritable
@@ -694,7 +700,7 @@ I am also usually active on irc, as 'ether' at C<irc.perl.org>.
 
 =head1 ACKNOWLEDGEMENTS
 
-L<AirG Inc.|http://corp.airg.com>, my employer, and the first user of this distribution.
+L<AirG Inc.|http://corp.airg.com>, my former employer, and the first user of this distribution.
 
 mst - Matt S. Trout <mst@shadowcat.co.uk>, for the better name of this
 distribution, and for the PSGI registration concept.
@@ -704,15 +710,33 @@ module, and from where I borrowed some aspects of the API.
 
 =head1 SEE ALSO
 
-L<entry for Perl Advent 2012|http://www.perladvent.org/2012/2012-12-12.html>
+=over 4
+
+=item *
+
+L<Perl advent article, 2012|http://www.perladvent.org/2012/2012-12-12.html>
+
+=item *
 
 L<Test::Mock::LWP::Dispatch>
 
+=item *
+
 L<Test::Mock::LWP::UserAgent>
+
+=item *
 
 L<LWP::UserAgent>
 
-L<PSGI>, L<HTTP::Message::PSGI>, L<LWP::Protocol::PSGI>
+=item *
+
+L<PSGI>, L<HTTP::Message::PSGI>, L<LWP::Protocol::PSGI>,
+
+=item *
+
+L<Plack::Test>, L<Plack::Test::ExternalServer>
+
+=back
 
 =head1 AUTHOR
 

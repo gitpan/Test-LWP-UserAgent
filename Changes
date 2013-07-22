@@ -1,11 +1,16 @@
 Revision history for Test-LWP-UserAgent
 
+0.019     2013-07-21 22:21:27 PDT-0700 (Karen Etheridge)
+          - switched examples to using object-based syntax, to make it more
+            clear that there is no monkey-patching (RT#86830), and other
+            documentation/example cleanup
+
 0.018     2013-03-22 11:08:50 PDT-0700 (Karen Etheridge)
           - fix test failures under newer perls by ensuring that serialized
             comparisons are always performed canonically
 
 0.017     2013-03-22 10:48:34 PDT-0700 (Karen Etheridge)
-          - really fix RT$84094 this time
+          - really fix RT#84094 this time
 
 0.016     2013-03-20 23:01:47 PDT-0700 (Karen Etheridge)
           - fixed handling of methods such as mirror() (RT#84094) - thanks for
