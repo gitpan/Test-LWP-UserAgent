@@ -1,11 +1,14 @@
 Build.PL
+CONTRIBUTING
 Changes
 INSTALL
 LICENSE
 MANIFEST
 META.json
 META.yml
+Makefile.PL
 README
+README.md
 advent_2012.pod
 dist.ini
 examples/MyApp/Client.pm
@@ -16,8 +19,7 @@ examples/application_client_test.t
 examples/call_psgi.t
 examples/myapp.psgi
 lib/Test/LWP/UserAgent.pm
-t/00-check-deps.t
-t/00-compile.t
+t/00-report-prereqs.t
 t/01-basic.t
 t/02-overload.t
 t/03-handlers.t
@@ -29,7 +31,10 @@ t/08-isa-coderef.t
 t/09-dispatch-to-request-method.t
 t/10-request-args-network.t
 t/11-request-args-internal.t
+t/50-examples-application_client_test.t
+t/51-call_psgi.t
 weaver.ini
+xt/author/00-compile.t
 xt/author/pod-spell.t
 xt/release/changes_has_content.t
 xt/release/clean-namespaces.t
@@ -38,6 +43,7 @@ xt/release/distmeta.t
 xt/release/eol.t
 xt/release/kwalitee.t
 xt/release/minimum-version.t
+xt/release/mojibake.t
 xt/release/no-tabs.t
 xt/release/pod-coverage.t
 xt/release/pod-no404s.t

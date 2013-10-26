@@ -1,8 +1,8 @@
 use strict;
 use warnings FATAL => 'all';
 
-use Test::More tests => 7;
-use Test::NoWarnings 1.04 ':early';
+use Test::More;
+use if $ENV{AUTHOR_TESTING}, 'Test::Warnings';
 use Test::Deep;
 use Test::TempDir;
 use Path::Tiny;
@@ -79,3 +79,4 @@ use Test::LWP::UserAgent;
     );
 }
 
+done_testing;

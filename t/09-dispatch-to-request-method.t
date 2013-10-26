@@ -1,10 +1,9 @@
 use strict;
 use warnings FATAL => 'all';
 
-use Test::More tests => 6;
-use Test::NoWarnings 1.04 ':early';
+use Test::More;
+use Test::Warnings 0.005 ':no_end_test', ':all';
 use Test::Deep 0.110;
-use Test::Warn;
 
 use HTTP::Request::Common;
 use HTTP::Response;
@@ -33,11 +32,11 @@ my $useragent = Test::LWP::UserAgent->new;
 $useragent->map_response('foo.com', 'MyDispatcher');
 $useragent->map_response('bar.com', MyDispatcher->new);
 
-warning_is
-    { $useragent->map_response('null.com', 'Foo') }
-    'map_response: response is not a coderef or an HTTP::Response, it\'s a non-object',
+like(
+    warning { $useragent->map_response('null.com', 'Foo') },
+    qr/^map_response: response is not a coderef or an HTTP::Response, it's a non-object/,
     'appropriate warning when creating a bad mapping',
-;
+);
 
 cmp_deeply(
     $useragent->request(GET('http://foo.com')),
@@ -63,8 +62,8 @@ cmp_deeply(
     'can dispatch to an instance that implements request()',
 );
 
-warning_is
-    {
+like(
+    warning {
         cmp_deeply(
             $useragent->request(GET('http://null.com')),
             all(
@@ -75,8 +74,10 @@ warning_is
             ),
             'cannot dispatch to a bare string',
         );
-    }
-    'response from coderef is not a HTTP::Response, it\'s a non-object',
+    },
+    qr/^response from coderef is not a HTTP::Response, it's a non-object/,
     'appropriate warning when attempting to dispatch inappropriately',
-;
+);
 
+had_no_warnings if $ENV{AUTHOR_TESTING};
+done_testing;

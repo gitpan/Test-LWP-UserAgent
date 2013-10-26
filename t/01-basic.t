@@ -1,8 +1,8 @@
 use strict;
 use warnings FATAL => 'all';
 
-use Test::More tests => 80;
-use Test::NoWarnings 1.04 ':early';
+use Test::More;
+use if $ENV{AUTHOR_TESTING}, 'Test::Warnings';
 use Test::Deep 0.110;
 use Scalar::Util 'refaddr';
 
@@ -213,3 +213,4 @@ sub test_send_request
     );
 }
 
+done_testing;

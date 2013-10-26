@@ -1,14 +1,14 @@
 use strict;
 use warnings;
 package Test::LWP::UserAgent;
-{
-  $Test::LWP::UserAgent::VERSION = '0.019';
-}
-# git description: v0.018-18-g907b3eb
-
 BEGIN {
   $Test::LWP::UserAgent::AUTHORITY = 'cpan:ETHER';
 }
+{
+  $Test::LWP::UserAgent::VERSION = '0.020';
+}
+# git description: v0.019-13-ga0f36c8
+
 # ABSTRACT: a LWP::UserAgent suitable for simulating and testing network calls
 
 use parent 'LWP::UserAgent';
@@ -335,9 +335,9 @@ __END__
 
 =pod
 
-=encoding utf-8
+=encoding UTF-8
 
-=for :stopwords Karen Etheridge useragent ORed WSDL irc AirG Yury Zavarin
+=for :stopwords Karen Etheridge useragent ORed WSDL irc AirG Yury Zavarin mst
 
 =head1 NAME
 
@@ -345,7 +345,7 @@ Test::LWP::UserAgent - a LWP::UserAgent suitable for simulating and testing netw
 
 =head1 VERSION
 
-version 0.019
+version 0.020
 
 =head1 SYNOPSIS
 
@@ -744,7 +744,7 @@ Karen Etheridge <ether@cpan.org>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2013 by Karen Etheridge.
+This software is copyright (c) 2012 by Karen Etheridge.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
