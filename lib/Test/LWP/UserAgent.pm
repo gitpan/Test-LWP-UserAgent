@@ -5,9 +5,9 @@ BEGIN {
   $Test::LWP::UserAgent::AUTHORITY = 'cpan:ETHER';
 }
 {
-  $Test::LWP::UserAgent::VERSION = '0.020';
+  $Test::LWP::UserAgent::VERSION = '0.021';
 }
-# git description: v0.019-13-ga0f36c8
+# git description: v0.020-2-gb7f440d
 
 # ABSTRACT: a LWP::UserAgent suitable for simulating and testing network calls
 
@@ -345,7 +345,7 @@ Test::LWP::UserAgent - a LWP::UserAgent suitable for simulating and testing netw
 
 =head1 VERSION
 
-version 0.020
+version 0.021
 
 =head1 SYNOPSIS
 
