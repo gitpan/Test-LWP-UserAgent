@@ -35,7 +35,7 @@ no_index:
 provides:
   Test::LWP::UserAgent:
     file: lib/Test/LWP/UserAgent.pm
-    version: 0.021
+    version: 0.022
 requires:
   Carp: 0
   HTTP::Date: 0
@@ -57,7 +57,7 @@ resources:
   bugtracker: https://rt.cpan.org/Public/Dist/Display.html?Name=Test-LWP-UserAgent
   homepage: https://github.com/karenetheridge/Test-LWP-UserAgent
   repository: https://github.com/karenetheridge/Test-LWP-UserAgent.git
-version: 0.021
+version: 0.022
 x_Dist_Zilla:
   perl:
     version: 5.019005
@@ -208,6 +208,10 @@ x_Dist_Zilla:
       name: '@Author::ETHER/ManifestSkip'
       version: 5.003
     -
+      class: Dist::Zilla::Plugin::Authority
+      name: '@Author::ETHER/Authority'
+      version: 1.006
+    -
       class: Dist::Zilla::Plugin::Git::Describe
       name: '@Author::ETHER/Git::Describe'
       version: 0.003
@@ -240,10 +244,6 @@ x_Dist_Zilla:
       class: Dist::Zilla::Plugin::AutoMetaResources
       name: '@Author::ETHER/AutoMetaResources'
       version: 1.20
-    -
-      class: Dist::Zilla::Plugin::Authority
-      name: '@Author::ETHER/Authority'
-      version: 1.006
     -
       class: Dist::Zilla::Plugin::MetaNoIndex
       name: '@Author::ETHER/MetaNoIndex'
@@ -293,7 +293,7 @@ x_Dist_Zilla:
     -
       class: Dist::Zilla::Plugin::RunExtraTests
       name: '@Author::ETHER/RunExtraTests'
-      version: 0.013
+      version: 0.015
     -
       class: Dist::Zilla::Plugin::MakeMaker::Fallback
       name: '@Author::ETHER/MakeMaker::Fallback'

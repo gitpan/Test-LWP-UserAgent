@@ -1,14 +1,14 @@
 use strict;
 use warnings;
 package Test::LWP::UserAgent;
+{
+  $Test::LWP::UserAgent::VERSION = '0.022';
+}
+# git description: v0.021-1-g86b1b81
+
 BEGIN {
   $Test::LWP::UserAgent::AUTHORITY = 'cpan:ETHER';
 }
-{
-  $Test::LWP::UserAgent::VERSION = '0.021';
-}
-# git description: v0.020-2-gb7f440d
-
 # ABSTRACT: a LWP::UserAgent suitable for simulating and testing network calls
 
 use parent 'LWP::UserAgent';
@@ -345,7 +345,7 @@ Test::LWP::UserAgent - a LWP::UserAgent suitable for simulating and testing netw
 
 =head1 VERSION
 
-version 0.021
+version 0.022
 
 =head1 SYNOPSIS
 

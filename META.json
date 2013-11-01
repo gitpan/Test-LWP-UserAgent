@@ -29,7 +29,7 @@
       },
       "develop" : {
          "recommends" : {
-            "Dist::Zilla::PluginBundle::Author::ETHER" : "0.034"
+            "Dist::Zilla::PluginBundle::Author::ETHER" : "0.035"
          },
          "requires" : {
             "Dist::Zilla" : "5.003",
@@ -101,7 +101,7 @@
    "provides" : {
       "Test::LWP::UserAgent" : {
          "file" : "lib/Test/LWP/UserAgent.pm",
-         "version" : "0.021"
+         "version" : "0.022"
       }
    },
    "release_status" : "stable",
@@ -117,7 +117,7 @@
          "web" : "https://github.com/karenetheridge/Test-LWP-UserAgent"
       }
    },
-   "version" : "0.021",
+   "version" : "0.022",
    "x_Dist_Zilla" : {
       "perl" : {
          "version" : "5.019005"
@@ -310,6 +310,11 @@
             "version" : "5.003"
          },
          {
+            "class" : "Dist::Zilla::Plugin::Authority",
+            "name" : "@Author::ETHER/Authority",
+            "version" : "1.006"
+         },
+         {
             "class" : "Dist::Zilla::Plugin::Git::Describe",
             "name" : "@Author::ETHER/Git::Describe",
             "version" : "0.003"
@@ -351,11 +356,6 @@
             "class" : "Dist::Zilla::Plugin::AutoMetaResources",
             "name" : "@Author::ETHER/AutoMetaResources",
             "version" : "1.20"
-         },
-         {
-            "class" : "Dist::Zilla::Plugin::Authority",
-            "name" : "@Author::ETHER/Authority",
-            "version" : "1.006"
          },
          {
             "class" : "Dist::Zilla::Plugin::MetaNoIndex",
@@ -420,7 +420,7 @@
          {
             "class" : "Dist::Zilla::Plugin::RunExtraTests",
             "name" : "@Author::ETHER/RunExtraTests",
-            "version" : "0.013"
+            "version" : "0.015"
          },
          {
             "class" : "Dist::Zilla::Plugin::MakeMaker::Fallback",
