@@ -4,9 +4,10 @@ package Test::LWP::UserAgent;
 BEGIN {
   $Test::LWP::UserAgent::AUTHORITY = 'cpan:ETHER';
 }
-# git description: v0.022-8-g0d9a268
-$Test::LWP::UserAgent::VERSION = '0.023';
-# ABSTRACT: a LWP::UserAgent suitable for simulating and testing network calls
+# git description: v0.023-13-g5fd169d
+$Test::LWP::UserAgent::VERSION = '0.024';
+# ABSTRACT: A LWP::UserAgent suitable for simulating and testing network calls
+# KEYWORDS: testing useragent networking mock server client
 # vim: set ts=8 sw=4 tw=78 et :
 
 use parent 'LWP::UserAgent';
@@ -335,15 +336,13 @@ __END__
 
 =encoding UTF-8
 
-=for :stopwords Karen Etheridge useragent ORed WSDL irc AirG Yury Zavarin mst
-
 =head1 NAME
 
-Test::LWP::UserAgent - a LWP::UserAgent suitable for simulating and testing network calls
+Test::LWP::UserAgent - A LWP::UserAgent suitable for simulating and testing network calls
 
 =head1 VERSION
 
-version 0.023
+version 0.024
 
 =head1 SYNOPSIS
 
@@ -387,7 +386,7 @@ The synopsis describes a classic case where you want to test how your
 application reacts to various responses from the server.  This module will let
 you send back various responses depending on the request, without having to
 set up a real server to test against.  This can be invaluable when you need to
-test edge cases or error conditions that do not normally arise from the
+test edge cases or error conditions that are not normally returned from the
 server.
 
 There are a lot of different ways you can set up the response mappings, and
@@ -424,6 +423,8 @@ or:
         '200',
         'I should have gotten an OK response',
     );
+
+=for stopwords useragent
 
 =head2 Ensuring the right useragent is used
 
@@ -616,6 +617,8 @@ get the object that was used, to verify options such as the network timeout.
 
 =head2 C<network_fallback>
 
+=for stopwords ORed
+
 Getter/setter method for the network_fallback preference that will be used on
 this object (if called as an instance method), or globally, if called as a
 class method.  Note that the actual behaviour used on an object is the ORed
@@ -635,9 +638,7 @@ All other methods from L<LWP::UserAgent> are available unchanged.
 
 =head1 Usage with SOAP requests
 
-=over
-
-=item * L<SOAP::Lite>
+=head2 L<SOAP::Lite>
 
 To use this module when communicating via L<SOAP::Lite> with a SOAP server (either a real one,
 with live network requests, L<see above|/network_fallback> or with one simulated
@@ -651,7 +652,9 @@ You must then make all your configuration changes and mappings globally.
 
 See also L<SOAP::Transport/CHANGING THE DEFAULT USERAGENT CLASS>.
 
-=item * L<XML::Compile::SOAP>
+=head2 L<XML::Compile::SOAP>
+
+=for stopwords WSDL
 
 When using L<XML::Compile::SOAP> with a compiled WSDL, you can change the
 useragent object via L<XML::Compile::Transport::SOAPHTTP>:
@@ -665,8 +668,6 @@ useragent object via L<XML::Compile::Transport::SOAPHTTP>:
     );
 
 See also L<XML::Compile::SOAP::FAQ/Adding HTTP headers>.
-
-=back
 
 =head1 MOTIVATION
 
@@ -688,11 +689,15 @@ sent to L<LWP::UserAgent>.
 
 =head1 SUPPORT
 
+=for stopwords irc
+
 Bugs may be submitted through L<the RT bug tracker|https://rt.cpan.org/Public/Dist/Display.html?Name=Test-LWP-UserAgent>
 (or L<bug-Test-LWP-UserAgent@rt.cpan.org>).
 I am also usually active on irc, as 'ether' at C<irc.perl.org>.
 
 =head1 ACKNOWLEDGEMENTS
+
+=for stopwords AirG Yury Zavarin mst
 
 L<AirG Inc.|http://corp.airg.com>, my former employer, and the first user of this distribution.
 

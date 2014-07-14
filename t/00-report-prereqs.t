@@ -45,38 +45,43 @@ my %exclude = map {; $_ => 1 } qw(
 my $static_prereqs = do { my $x = {
        'configure' => {
                         'requires' => {
-                                        'ExtUtils::MakeMaker' => '6.30',
-                                        'Module::Build::Tiny' => '0.034'
+                                        'ExtUtils::MakeMaker' => '6.30'
                                       }
                       },
        'develop' => {
                       'recommends' => {
-                                        'Dist::Zilla::PluginBundle::Author::ETHER' => '0.050'
+                                        'Dist::Zilla::PluginBundle::Author::ETHER' => '0.065'
                                       },
                       'requires' => {
-                                      'Dist::Zilla' => '5.013',
+                                      'Dist::Zilla' => '5',
                                       'Dist::Zilla::Plugin::ContributorsFromGit' => '0',
+                                      'Dist::Zilla::Plugin::DynamicPrereqs' => '0',
+                                      'Dist::Zilla::Plugin::GenerateFile' => '0',
                                       'Dist::Zilla::Plugin::GitHub::Update' => '0',
                                       'Dist::Zilla::Plugin::GithubMeta' => '0',
-                                      'Dist::Zilla::Plugin::MakeMaker::Fallback' => '0',
-                                      'Dist::Zilla::Plugin::ModuleBuildTiny' => '0.004',
+                                      'Dist::Zilla::Plugin::MakeMaker' => '0',
+                                      'Dist::Zilla::Plugin::MetaResources' => '0',
                                       'Dist::Zilla::Plugin::Prereqs' => '0',
+                                      'Dist::Zilla::Plugin::Test::CleanNamespaces' => '0',
                                       'Dist::Zilla::PluginBundle::Author::ETHER' => '0.033',
                                       'File::Spec' => '0',
                                       'HTTP::Message::PSGI' => '0',
                                       'IO::Handle' => '0',
                                       'IPC::Open3' => '0',
+                                      'JSON::MaybeXS' => '0',
+                                      'Path::Tiny' => '0',
                                       'Plack::Util' => '0',
                                       'Pod::Coverage::TrustPod' => '0',
                                       'Pod::Weaver::Section::Contributors' => '0',
                                       'Test::CPAN::Changes' => '0.19',
                                       'Test::CPAN::Meta' => '0',
-                                      'Test::CleanNamespaces' => '0',
+                                      'Test::CleanNamespaces' => '0.13',
                                       'Test::Kwalitee' => '1.12',
                                       'Test::More' => '0.94',
                                       'Test::NoTabs' => '0',
                                       'Test::Pod' => '1.41',
                                       'Test::Pod::Coverage' => '1.08',
+                                      'Test::Spelling' => '0.12',
                                       'Test::Warnings' => '0'
                                     }
                     },
@@ -113,10 +118,11 @@ my $static_prereqs = do { my $x = {
                                    'Path::Tiny' => '0',
                                    'Test::Deep' => '0.110',
                                    'Test::Fatal' => '0',
-                                   'Test::More' => '0',
+                                   'Test::More' => '0.88',
                                    'Test::Requires' => '0',
-                                   'Test::Warnings' => '0.005',
+                                   'Test::Warnings' => '0.009',
                                    'if' => '0',
+                                   'lib' => '0',
                                    'overload' => '0',
                                    'version' => '0'
                                  }
