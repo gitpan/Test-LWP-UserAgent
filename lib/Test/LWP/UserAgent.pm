@@ -4,8 +4,8 @@ package Test::LWP::UserAgent;
 BEGIN {
   $Test::LWP::UserAgent::AUTHORITY = 'cpan:ETHER';
 }
-# git description: v0.023-13-g5fd169d
-$Test::LWP::UserAgent::VERSION = '0.024';
+# git description: v0.024-1-g06e4fcd
+$Test::LWP::UserAgent::VERSION = '0.025';
 # ABSTRACT: A LWP::UserAgent suitable for simulating and testing network calls
 # KEYWORDS: testing useragent networking mock server client
 # vim: set ts=8 sw=4 tw=78 et :
@@ -342,7 +342,7 @@ Test::LWP::UserAgent - A LWP::UserAgent suitable for simulating and testing netw
 
 =head1 VERSION
 
-version 0.024
+version 0.025
 
 =head1 SYNOPSIS
 

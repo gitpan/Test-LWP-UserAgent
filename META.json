@@ -117,7 +117,7 @@
    "provides" : {
       "Test::LWP::UserAgent" : {
          "file" : "lib/Test/LWP/UserAgent.pm",
-         "version" : "0.024"
+         "version" : "0.025"
       }
    },
    "release_status" : "stable",
@@ -135,7 +135,7 @@
       "x_IRC" : "irc://irc.perl.org/#perl-qa",
       "x_MailingList" : "http://lists.perl.org/list/perl-qa.html"
    },
-   "version" : "0.024",
+   "version" : "0.025",
    "x_Dist_Zilla" : {
       "perl" : {
          "version" : "5.021001"
@@ -599,7 +599,7 @@
                }
             },
             "name" : "@Author::ETHER/RunExtraTests",
-            "version" : "0.021"
+            "version" : "0.022"
          },
          {
             "class" : "Dist::Zilla::Plugin::CheckSelfDependency",
@@ -742,7 +742,7 @@
                "Dist::Zilla::Plugin::Git::Tag" : {
                   "branch" : null,
                   "signed" : 0,
-                  "tag" : "v0.024",
+                  "tag" : "v0.025",
                   "tag_format" : "v%v%t",
                   "tag_message" : "v%v%t",
                   "time_zone" : "local"
