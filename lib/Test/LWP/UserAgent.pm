@@ -1,11 +1,8 @@
 use strict;
 use warnings;
 package Test::LWP::UserAgent;
-BEGIN {
-  $Test::LWP::UserAgent::AUTHORITY = 'cpan:ETHER';
-}
-# git description: v0.024-1-g06e4fcd
-$Test::LWP::UserAgent::VERSION = '0.025';
+# git description: v0.025-10-geef9264
+$Test::LWP::UserAgent::VERSION = '0.026';
 # ABSTRACT: A LWP::UserAgent suitable for simulating and testing network calls
 # KEYWORDS: testing useragent networking mock server client
 # vim: set ts=8 sw=4 tw=78 et :
@@ -342,7 +339,7 @@ Test::LWP::UserAgent - A LWP::UserAgent suitable for simulating and testing netw
 
 =head1 VERSION
 
-version 0.025
+version 0.026
 
 =head1 SYNOPSIS
 
@@ -722,6 +719,10 @@ L<Test::Mock::LWP::Dispatch>
 =item *
 
 L<Test::Mock::LWP::UserAgent>
+
+=item *
+
+L<URI>, L<HTTP::Request>, L<HTTP::Response>
 
 =item *
 
